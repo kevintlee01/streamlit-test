@@ -15,7 +15,7 @@ if upload_file:
   st.header('Data Header')
   st.write(df.head())
 
-  fig, ax = plt.subplot(1, 1)
+  fig, ax = plt.subplots(1, 1)
   ax.scatter(x = df['depth'], y = df['mag'])
   ax.set_xlabel('Depth of Earthquake')
   ax.set_ylabel('Magnitude of Earthquake')
