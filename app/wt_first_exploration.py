@@ -20,7 +20,7 @@ import streamlit as st
 sns.set()
 
 df_Zon = pd.read_csv("app\ZonAnn.Ts+dSST.csv")
-st.text(df_Zon.head())
+st.write(df_Zon.head())
 
 df_Zon_plot1 = plt.figure(figsize = (10,7))
 sns.lineplot(x = "Year", y = "Glob", data = df_Zon, label = "Global")
