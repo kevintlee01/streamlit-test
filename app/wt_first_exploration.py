@@ -43,8 +43,43 @@ plt.legend();
 
 st.pyplot(df_Zon_plot)
 
+df_co2 = pd.read_csv("app/owid-co2-data.csv")
+st.write(df_co2.head())
 
-g.add_legend();
+df_co2["country"].unique()
 
-st.pyplot(g)
+df_co2_n = df_co2[df_co2["country"].isin(["North America", "Asia", "Europe", "World"])]
 
+st.write(df_co2_n.head())
+
+df_co2_plot1 = plt.figure(figsize = (10,7))
+sns.relplot(x = "year", y = "share_of_temperature_change_from_ghg", kind = "line", hue = "country", data = df_co2_n)
+plt.xlabel("Year")
+plt.ylabel("Contribution (%)")
+plt.title("Share of contribution to global warming");
+
+st.pyplot(df_Zon_plot1)
+
+df_co2_plot2 = plt.figure(figsize = (10,7))
+sns.relplot(x = "year", y = "temperature_change_from_co2", kind = "line", hue = "country", data = df_co2_n)
+plt.xlabel("Year")
+plt.ylabel("Temperature change (ºC)")
+plt.title("Contribution to temperature increase due to CO2");
+
+st.pyplot(df_Zon_plot2)
+
+df_co2_plot13 = plt.figure(figsize = (12,8))
+sns.relplot(x = "year", y = "co2", kind = "line", hue = "country", data = df_co2_n)
+plt.xlabel("Year")
+plt.ylabel("CO2 (million tonnes)")
+plt.title("Annual total emissions of CO2");
+
+st.pyplot(df_Zon_plot3)
+
+df_co2_plot4 = plt.figure(figsize = (12,8))
+sns.relplot(x = "year", y = "co2_per_capita", kind = "line", hue = "country", data = df_co2_n)
+plt.xlabel("Year")
+plt.ylabel("CO2 (million tonnes per person)")
+plt.title("Annual emissions of CO2 per capita");
+
+st.pyplot(df_Zon_plot4)
