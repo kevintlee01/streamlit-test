@@ -50,32 +50,42 @@ df_co2.head()
 df_co2["country"].unique()
 
 df_co2_n = df_co2[df_co2["country"].isin(["North America", "Asia", "Europe", "World"])]
+st.dataframe(df_co2_n)
 
 st.write(df_co2_n.head())
 
-plt.figure(figsize = (10,7))
+df_Zon_plot3 = plt.figure(figsize = (10,7))
 sns.relplot(x = "year", y = "share_of_temperature_change_from_ghg", kind = "line", hue = "country", data = df_co2_n)
 plt.xlabel("Year")
 plt.ylabel("Contribution (%)")
 plt.title("Share of contribution to global warming");
 
-plt.figure(figsize = (10,7))
+st.pyplot(df_Zon_plot3)
+
+df_Zon_plot4 = plt.figure(figsize = (10,7))
 sns.relplot(x = "year", y = "temperature_change_from_co2", kind = "line", hue = "country", data = df_co2_n)
 plt.xlabel("Year")
 plt.ylabel("Temperature change (ºC)")
 plt.title("Contribution to temperature increase due to CO2");
 
-plt.figure(figsize = (12,8))
+st.pyplot(df_Zon_plot4)
+
+df_Zon_plot5 = plt.figure(figsize = (12,8))
 sns.relplot(x = "year", y = "co2", kind = "line", hue = "country", data = df_co2_n)
 plt.xlabel("Year")
 plt.ylabel("CO2 (million tonnes)")
 plt.title("Annual total emissions of CO2");
 
-plt.figure(figsize = (12,8))
+st.pyplot(df_Zon_plot5)
+
+df_Zon_plot6 = plt.figure(figsize = (12,8))
 sns.relplot(x = "year", y = "co2_per_capita", kind = "line", hue = "country", data = df_co2_n)
 plt.xlabel("Year")
 plt.ylabel("CO2 (million tonnes per person)")
 plt.title("Annual emissions of CO2 per capita");
+
+st.pyplot(df_Zon_plot6)
+
 
 df_co2_n["gdp"] = df_co2_n['co2']/df_co2_n["co2_per_gdp"]
 
@@ -92,6 +102,7 @@ st.pyplot(g)
 
 # Since GDP and population seem to positively correlate with Co2 emissions and temperature increase, let's focus on some big and/or rich countries.
 df_co2_country = df_co2[df_co2["country"].isin(["United States", "Canada", "Germany", "France", "Russia", "China", "India", "Brazil", "Australia"])]
+st.dataframe(df_co2_country)
 
 # We will also have a separate dataset with "World" co2 data.
 
