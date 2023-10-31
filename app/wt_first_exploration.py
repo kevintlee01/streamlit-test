@@ -138,3 +138,257 @@ st.text(f'NHem-Average temperature anomalies between 1880 and 1900: {average_n:.
 average_s = filtered['SHem'].mean()
 st.text(f'SHem-Average temperature anomalies between 1880 and 1900: {average_s:.2f}')
 
+df_temp["NHem_adj"] = df_temp["NHem"] - (-0.30)
+df_temp["SHem_adj"] = df_temp["SHem"] - (-0.14)
+
+df_temp.head()
+
+df_temp_plot2 = plt.figure(figsize = (10,7))
+sns.lineplot(x = "Year", y = "Glob_adj", data = df_temp, label = "Global")
+sns.lineplot(x = "Year", y = "NHem_adj", data = df_temp, label = "Northern Hemisphere")
+sns.lineplot(x = "Year", y = "SHem_adj", data = df_temp, label = "Southern Hemisphere")
+plt.xlabel("Year")
+plt.ylabel("Temperature (ºC change)")
+plt.title("Temperature anomalies (pre-industrial levels)")
+plt.legend();
+
+st.pyplot(df_temp_plot2)
+
+# We can see that the Northern Hemisphere has surpased the 1.5ºC "limit" a couple of times. It's also interesting to see a seasonality in the data...
+
+# Some graphs for the country dataset:
+
+df_temp_plot3 = plt.figure(figsize = (10,7))
+sns.relplot(x = "year", y = "temperature_change_from_co2", kind = "line", hue = "country", data = df_co2_country)
+plt.xlabel("Year")
+plt.ylabel("Temperature change (ºC)")
+plt.title("Contribution to temperature increase due to CO2");
+
+st.pyplot(df_temp_plot3)
+
+# United States is a big contributor to temperature increase due to CO2 emissions!
+
+df_temp_plot4 = plt.figure(figsize = (12,8))
+sns.relplot(x = "year", y = "co2", kind = "line", hue = "country", data = df_co2_country)
+plt.xlabel("Year")
+plt.ylabel("CO2 (million tonnes)")
+plt.title("Annual total emissions of CO2");
+
+st.pyplot(df_temp_plot4)
+
+df_temp_plot5 = plt.figure(figsize = (12,8))
+sns.relplot(x = "year", y = "co2_per_capita", kind = "line", hue = "country", data = df_co2_country)
+plt.xlabel("Year")
+plt.ylabel("CO2 (million tonnes per person)")
+plt.title("Annual emissions of CO2 per capita");
+
+st.pyplot(df_temp_plot5)
+
+# In the last few decades, China has been leading in total Co2 emissions, although on a per capita basis,
+# the United States was the leader throughout the last century.
+
+df_temp_plot6 = plt.figure(figsize = (10,7))
+sns.relplot(x = "gdp", y = "temperature_change_from_co2", hue = "country", data = df_co2_country)
+plt.xlabel("GDP")
+plt.ylabel("Temperature change (ºC)")
+plt.title("Temperature change due to CO2");
+
+st.pyplot(df_temp_plot6)
+
+# Picking only variables of interest (let me know if you want to add another):
+
+co2_country = df_co2_country[["country", "year", "population", "gdp", "co2", "co2_per_capita", "co2_per_gdp", "temperature_change_from_co2"]]
+
+co2_country.info()
+
+# Handling missing values (I chose median because it's more robust to extreme values):
+
+cols = ['population', 'gdp', 'co2', 'co2_per_capita', 'co2_per_gdp', 'temperature_change_from_co2']
+
+for i in cols:
+    co2_country[i] = co2_country[i].fillna(co2_country[i].median())
+
+# Some statistical tests:
+# H0: variables are not correlated
+# H1: variables are correlated
+# alpha = 0.05
+
+from scipy.stats import pearsonr
+
+pearsonr(x = co2_country.population, y = co2_country.temperature_change_from_co2)
+
+# Population and temperature change due to CO2 are statistically correlated.
+
+pearsonr(x = co2_country.gdp, y = co2_country.temperature_change_from_co2)
+
+# GDP and temperature change due to CO2 are statistically correlated.
+
+# Merging NASA dataset with world co2 data ("inner" join to only have data from 1880 and avoid getting more NaNs)
+df_temp = df_temp.rename({"Year" : "year"}, axis=1)
+
+merged_global = df_temp.merge(right = df_co2_world, on = "year", how = "inner")
+
+merged_global.head()
+
+# Picking only variables of interest (let me know if you want to add another):
+
+merged_global = merged_global[["year", "Glob_adj", "NHem_adj", "SHem_adj", "country", "population", "gdp", "co2", "co2_per_capita", "co2_per_gdp", "temperature_change_from_co2"]]
+
+merged_global.info()
+
+# I would suggest to remove gdp and co2_per_gdp in this case (too many NaNs)
+
+# Some statistical tests:
+# H0: variables are not correlated
+# H1: variables are correlated
+# alpha = 0.05
+
+from scipy.stats import pearsonr
+
+pearsonr(x = merged_global.population, y = merged_global.Glob_adj)
+
+# Population and Global temperature change are statistically correlated.
+
+pearsonr(x = merged_global.co2, y = merged_global.Glob_adj)
+
+# CO2 emissions and Global temperature change are statistically correlated.
+
+import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+# Load the CO2 emissions data (owid-co2-data.csv)
+co2_data = pd.read_csv('app/owid-co2-data.csv')
+
+# Load the temperature data (GLB.Ts+dSST.csv)
+temperature_data = pd.read_csv('app/GLB.Ts+dSST.csv', skiprows=1)  # Skip the first row
+
+# Data Distribution Analysis for CO2 Emissions
+co2_description = co2_data.describe()
+co2_mean = co2_data['co2'].mean()
+co2_median = co2_data['co2'].median()
+co2_mode = co2_data['co2'].mode().values[0]
+co2_std = co2_data['co2'].std()
+co2_range = co2_data['co2'].max() - co2_data['co2'].min()
+co2_iqr = co2_data['co2'].quantile(0.75) - co2_data['co2'].quantile(0.25)
+
+# Data Distribution Analysis for Temperature Anomalies
+temperature_description = temperature_data.describe()
+temperature_mean = temperature_data['J-D'].mean()
+temperature_median = temperature_data['J-D'].median()
+temperature_mode = temperature_data['J-D'].mode().values[0]
+temperature_std = temperature_data['J-D'].std()
+temperature_range = temperature_data['J-D'].max() - temperature_data['J-D'].min()
+temperature_iqr = temperature_data['J-D'].quantile(0.75) - temperature_data['J-D'].quantile(0.25)
+
+# Data Visualization
+plot1 = plt.figure(figsize=(14, 6))
+plt.subplot(1, 2, 1)
+sns.histplot(data=co2_data, x='co2', kde=True)
+plt.title("CO2 Emissions Distribution")
+
+plt.subplot(1, 2, 2)
+sns.histplot(data=temperature_data, x='J-D', kde=True)
+plt.title("Temperature Anomalies Distribution")
+
+plt.show()
+
+st.pyplot(plot1)
+
+# Print Data Distribution Summary
+st.write("Summary Statistics for CO2 Emissions:")
+st.write(co2_description)
+st.write(f"Mean: {co2_mean:.2f}, Median: {co2_median:.2f}, Mode: {co2_mode:.2f}")
+st.write(f"Standard Deviation: {co2_std:.2f}, Range: {co2_range:.2f}, IQR: {co2_iqr:.2f}")
+
+st.write("\nSummary Statistics for Temperature Anomalies:")
+st.write(temperature_description)
+st.write(f"Mean: {temperature_mean:.2f}, Median: {temperature_median:.2f}, Mode: {temperature_mode:.2f}")
+st.write(f"Standard Deviation: {temperature_std:.2f}, Range: {temperature_range:.2f}, IQR: {temperature_iqr:.2f}")
+
+import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+# Load the CO2 emissions data (owid-co2-data.csv)
+co2_data = pd.read_csv('app/owid-co2-data.csv')
+
+# Load the temperature data (ZonAnn.Ts+dSST.csv)
+temperature_data = pd.read_csv('app/ZonAnn.Ts+dSST.csv')
+
+# Data Distribution Analysis for CO2 Emissions
+co2_description = co2_data.describe()
+co2_mean = co2_data['co2'].mean()
+co2_median = co2_data['co2'].median()
+co2_mode = co2_data['co2'].mode().values[0]
+co2_std = co2_data['co2'].std()
+co2_range = co2_data['co2'].max() - co2_data['co2'].min()
+co2_iqr = co2_data['co2'].quantile(0.75) - co2_data['co2'].quantile(0.25)
+
+# Data Distribution Analysis for Temperature Anomalies
+temperature_description = temperature_data.describe()
+temperature_mean = temperature_data['Glob'].mean()
+temperature_median = temperature_data['Glob'].median()
+temperature_mode = temperature_data['Glob'].mode().values[0]
+temperature_std = temperature_data['Glob'].std()
+temperature_range = temperature_data['Glob'].max() - temperature_data['Glob'].min()
+temperature_iqr = temperature_data['Glob'].quantile(0.75) - temperature_data['Glob'].quantile(0.25)
+
+# Data Visualization
+plot2 = plt.figure(figsize=(14, 6))
+plt.subplot(1, 2, 1)
+sns.histplot(data=co2_data, x='co2', kde=True)
+plt.title("CO2 Emissions Distribution")
+
+plt.subplot(1, 2, 2)
+sns.histplot(data=temperature_data, x='Glob', kde=True)
+plt.title("Temperature Anomalies Distribution")
+
+plt.show()
+
+st.pyplot(plot2)
+
+# Print Data Distribution Summary
+st.write("Summary Statistics for CO2 Emissions:")
+st.write(co2_description)
+st.write(f"Mean: {co2_mean:.2f}, Median: {co2_median:.2f}, Mode: {co2_mode:.2f}")
+st.write(f"Standard Deviation: {co2_std:.2f}, Range: {co2_range:.2f}, IQR: {co2_iqr:.2f}")
+
+st.write("\nSummary Statistics for Temperature Anomalies:")
+st.write(temperature_description)
+st.write(f"Mean: {temperature_mean:.2f}, Median: {temperature_median:.2f}, Mode: {temperature_mode:.2f}")
+st.write(f"Standard Deviation: {temperature_std:.2f}, Range: {temperature_range:.2f}, IQR: {temperature_iqr:.2f}")
+
+cols = ["population", "gdp", "co2", "co2_per_capita", "co2_per_gdp"]
+
+for i in cols:
+  sns.displot(co2_data[i], kde = True)
+
+co2_data.boxplot(cols)
+plt.show();
+
+# We already knew that the "raw data" has a broad range of values for gdp and population.
+
+# Analysis of the "merged_global" data (i.e. global temperatures already merged with "World" co2 data)
+# I didn't include here "gdp" or "co2_per_gdp" because info showed too many NaNs.
+
+cols2 = ["Glob_adj", "NHem_adj", "SHem_adj", "population", "co2", "co2_per_capita", "temperature_change_from_co2"]
+for i in cols2:
+  sns.displot(merged_global[i], kde = True)
+
+for i in cols2:
+  sns.boxplot(data = merged_global[i])
+  plt.title(f'Boxplot for {i}')
+  plt.show()
+
+st.pyplot(plot2)
+
+plot3 = plt.figure(figsize=(7,7))
+
+sns.heatmap(merged_global[cols2].corr(),annot=True,cmap='viridis');
+
+# A high correlation between many of the variables chosen can be seen.
+
+sns.pairplot(merged_global[cols2], diag_kind = "kde")
+
+st.pyplot(plot3)
