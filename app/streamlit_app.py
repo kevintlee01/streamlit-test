@@ -6,7 +6,7 @@ st.title('Earthquake Data Explorer')
 st.text('This is a web app to explore earthquake data.')
 
 #upload_file = st.file_uploader('Upload your file here')
-upload_file = "all_day.csv'
+upload_file = 'all_day.csv'
 
 if upload_file:
   df = pd.read_csv(upload_file)
