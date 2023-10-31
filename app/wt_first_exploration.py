@@ -29,9 +29,9 @@ df_Zon_plot1 = plt.figure(figsize = (10,7))
 sns.lineplot(x = "Year", y = "Glob", data = df_Zon, label = "Global")
 sns.lineplot(x = "Year", y = "NHem", data = df_Zon, label = "Northern Hemisphere")
 sns.lineplot(x = "Year", y = "SHem", data = df_Zon, label = "Southern Hemisphere")
-df_Zon_plot1.xlabel("Year")
-df_Zon_plot1.ylabel("Temperature (ºC change)")
-df_Zon_plot1.title("Temperature anomalies")
-df_Zon_plot1.legend();
+plt.xlabel("Year")
+plt.ylabel("Temperature (ºC change)")
+plt.title("Temperature anomalies")
+plt.legend();
 
 st.pyplot(df_Zon_plot1)
