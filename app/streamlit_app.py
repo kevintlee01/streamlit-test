@@ -23,6 +23,6 @@ if upload_file:
 
   st.pyplot(fig)
 
-components.iframe('https://docs.google.com/presentation/d/1Vh8ZytpGxqdy3oJA0bb1I-xUNjT4az5DfEve7O8myWY/edit?usp=sharing')
+components.iframe('https://docs.google.com/presentation/d/e/2PACX-1vQ-NlRA9_H6HBPhIcpefv2hIJPmu7qq15FkdbZIgN9_rFToDbs4ibbW45q_uNyCF0PzqWtBI4zxVBib/embed?start=false&loop=false&delayms=60000', height=480)
 
 
