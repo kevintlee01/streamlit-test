@@ -22,7 +22,7 @@ sns.set()
 
 
 
-df_Zon = pd.read_csv("ZonAnn.Ts+dSST.csv")
+df_Zon = pd.read_csv("app/ZonAnn.Ts+dSST.csv")
 st.write(df_Zon.head())
 
 st.pyplot(plt.figure(figsize = (10,7)))
@@ -43,7 +43,7 @@ plt.ylabel("Temperature (ºC change)")
 plt.title("Temperature anomalies")
 plt.legend();
 
-df_co2 = pd.read_csv("owid-co2-data.csv")
+df_co2 = pd.read_csv("app/owid-co2-data.csv")
 df_co2.head()
 
 df_co2["country"].unique()
@@ -243,7 +243,7 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 
 # Load the CO2 emissions data (owid-co2-data.csv)
-co2_data = pd.read_csv('owid-co2-data.csv')
+co2_data = pd.read_csv('app/owid-co2-data.csv')
 
 # Load the temperature data (GLB.Ts+dSST.csv)
 temperature_data = pd.read_csv('GLB.Ts+dSST.csv', skiprows=1)  # Skip the first row
