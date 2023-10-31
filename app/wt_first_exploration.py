@@ -246,7 +246,7 @@ import matplotlib.pyplot as plt
 co2_data = pd.read_csv('app/owid-co2-data.csv')
 
 # Load the temperature data (GLB.Ts+dSST.csv)
-temperature_data = pd.read_csv('GLB.Ts+dSST.csv', skiprows=1)  # Skip the first row
+temperature_data = pd.read_csv('app/GLB.Ts+dSST.csv', skiprows=1)  # Skip the first row
 
 # Data Distribution Analysis for CO2 Emissions
 co2_description = co2_data.describe()
@@ -294,10 +294,10 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 
 # Load the CO2 emissions data (owid-co2-data.csv)
-co2_data = pd.read_csv('owid-co2-data.csv')
+co2_data = pd.read_csv('app/owid-co2-data.csv')
 
 # Load the temperature data (ZonAnn.Ts+dSST.csv)
-temperature_data = pd.read_csv('ZonAnn.Ts+dSST.csv')
+temperature_data = pd.read_csv("app/ZonAnn.Ts+dSST.csv')
 
 # Data Distribution Analysis for CO2 Emissions
 co2_description = co2_data.describe()
