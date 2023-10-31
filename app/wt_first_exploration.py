@@ -22,7 +22,7 @@ df_Zon = pd.read_csv("app/ZonAnn.Ts+dSST.csv")
 st.write(df_Zon.head())
 
 df_Zon_plot = plt.figure(figsize = (10,7))
-plt.subplot(1,1)
+plt.subplots(1,1)
 sns.lineplot(x = "Year", y = "Glob", data = df_Zon, label = "Global")
 sns.lineplot(x = "Year", y = "NHem", data = df_Zon, label = "Northern Hemisphere")
 sns.lineplot(x = "Year", y = "SHem", data = df_Zon, label = "Southern Hemisphere")
@@ -32,7 +32,7 @@ plt.title("Temperature anomalies")
 plt.legend();
 
 plt.figure(figsize = (10,7))
-plt.subplot(1,1)
+plt.subplots(1,1)
 sns.lineplot(x = "Year", y = "Glob", data = df_Zon[df_Zon["Year"]>=1990], label = "Global")
 sns.lineplot(x = "Year", y = "NHem", data = df_Zon[df_Zon["Year"]>=1990], label = "Northern Hemisphere")
 sns.lineplot(x = "Year", y = "SHem", data = df_Zon[df_Zon["Year"]>=1990], label = "Southern Hemisphere")
