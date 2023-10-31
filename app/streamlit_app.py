@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
+import streamlit.components.v1 as components
 
 st.title('Earthquake Data Explorer')
 st.text('This is a web app to explore earthquake data.')
@@ -21,4 +22,7 @@ if upload_file:
   ax.set_ylabel('Magnitude of Earthquake')
 
   st.pyplot(fig)
+
+components.iframe('https://docs.google.com/presentation/d/1Vh8ZytpGxqdy3oJA0bb1I-xUNjT4az5DfEve7O8myWY/edit?usp=sharing')
+
 
