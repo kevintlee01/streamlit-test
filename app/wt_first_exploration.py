@@ -51,6 +51,7 @@ df_co2["country"].unique()
 
 df_co2_n = df_co2[df_co2["country"].isin(["North America", "Asia", "Europe", "World"])]
 st.dataframe(df_co2_n)
+st.sidebar.multiselect('Which country do you want?',df_co2_n)
 
 st.write(df_co2_n.head())
 
@@ -103,6 +104,7 @@ st.pyplot(g)
 # Since GDP and population seem to positively correlate with Co2 emissions and temperature increase, let's focus on some big and/or rich countries.
 df_co2_country = df_co2[df_co2["country"].isin(["United States", "Canada", "Germany", "France", "Russia", "China", "India", "Brazil", "Australia"])]
 st.dataframe(df_co2_country)
+st.sidebar.multiselect('Which country do you want?',df_co2_country)
 
 # We will also have a separate dataset with "World" co2 data.
 
