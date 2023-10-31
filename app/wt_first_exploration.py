@@ -297,7 +297,7 @@ import matplotlib.pyplot as plt
 co2_data = pd.read_csv('app/owid-co2-data.csv')
 
 # Load the temperature data (ZonAnn.Ts+dSST.csv)
-temperature_data = pd.read_csv("app/ZonAnn.Ts+dSST.csv')
+temperature_data = pd.read_csv('app/ZonAnn.Ts+dSST.csv')
 
 # Data Distribution Analysis for CO2 Emissions
 co2_description = co2_data.describe()
