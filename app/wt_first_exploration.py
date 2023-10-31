@@ -53,37 +53,29 @@ df_co2_n = df_co2[df_co2["country"].isin(["North America", "Asia", "Europe", "Wo
 
 st.write(df_co2_n.head())
 
-df_co2_n_plot1 = plt.figure(figsize = (10,7))
+plt.figure(figsize = (10,7))
 sns.relplot(x = "year", y = "share_of_temperature_change_from_ghg", kind = "line", hue = "country", data = df_co2_n)
 plt.xlabel("Year")
 plt.ylabel("Contribution (%)")
 plt.title("Share of contribution to global warming");
 
-st.pyplot(df_co2_n_plot1)
-
-df_co2_n_plot2 = plt.figure(figsize = (10,7))
+plt.figure(figsize = (10,7))
 sns.relplot(x = "year", y = "temperature_change_from_co2", kind = "line", hue = "country", data = df_co2_n)
 plt.xlabel("Year")
 plt.ylabel("Temperature change (ºC)")
 plt.title("Contribution to temperature increase due to CO2");
 
-st.pyplot(df_co2_n_plot2)
-
-df_co2_n_plot3 = plt.figure(figsize = (12,8))
+plt.figure(figsize = (12,8))
 sns.relplot(x = "year", y = "co2", kind = "line", hue = "country", data = df_co2_n)
 plt.xlabel("Year")
 plt.ylabel("CO2 (million tonnes)")
 plt.title("Annual total emissions of CO2");
 
-st.pyplot(df_co2_n_plot3)
-
-df_co2_n_plot4 = plt.figure(figsize = (12,8))
+plt.figure(figsize = (12,8))
 sns.relplot(x = "year", y = "co2_per_capita", kind = "line", hue = "country", data = df_co2_n)
 plt.xlabel("Year")
 plt.ylabel("CO2 (million tonnes per person)")
 plt.title("Annual emissions of CO2 per capita");
-
-st.pyplot(df_co2_n_plot4)
 
 df_co2_n["gdp"] = df_co2_n['co2']/df_co2_n["co2_per_gdp"]
 
@@ -97,4 +89,52 @@ g.set_titles(col_template="Temperature change vs GDP")
 g.add_legend();
 
 st.pyplot(g)
+
+# Since GDP and population seem to positively correlate with Co2 emissions and temperature increase, let's focus on some big and/or rich countries.
+df_co2_country = df_co2[df_co2["country"].isin(["United States", "Canada", "Germany", "France", "Russia", "China", "India", "Brazil", "Australia"])]
+
+# We will also have a separate dataset with "World" co2 data.
+
+df_co2_world = df_co2.loc[df_co2["country"] == "World"]
+
+# From the NASA dataset, we will work with Year, Glob, NHem and SHem variables:
+
+df_temp = df_Zon[["Year", "Glob", "SHem", "NHem"]]
+
+# With the first dataset (df_co2_country) we can compare trends between these countries and identify some correlations.
+# For the modeling part, we can focus on global data (merging df_co2_world and df_temp datasets) to predict temperature changes in the next years.
+
+# As seen in the previous graphs, we have more complete co2 data since about 1850.
+# And in our NASA dataset we have data since 1880. Also, the nasa dataset is very complete (no missing values)
+# so we decided to focus on the data since 1880.
+# Choosing "Glob" as our target value, it is also important to not have any NaNs there.
+# However, our NASA dataset is based on the 1951-1980 period. Since we want to compare these temperature changes with
+# the target of "1.5ºC maximum increase from the pre-industrial average", we have to change the baseline to the pre-industrial period.
+# Let's say that the pre-industrial period in our case is 1880-1900, we calculate the average anomalies in that period and
+# subtract it from the other values, to obtain new temperature anomalies now in reference to the "pre-industrial period".
+
+filtered = df_temp[(df_temp['Year'] >= 1880) & (df_temp['Year'] <= 1900)]
+
+# Calculate the average temperature anomalies for the specified period
+average = filtered['Glob'].mean()
+
+st.text(f'Average temperature anomalies between 1880 and 1900: {average:.2f}')
+
+df_temp["Glob_adj"] = df_temp["Glob"] - (-0.22)
+
+st.write(df_temp.head())
+
+df_temp_plot1 = plt.figure(figsize = (10,7))
+sns.lineplot(x = "Year", y = "Glob_adj", data = df_temp)
+plt.xlabel("Year")
+plt.ylabel("Temperature (ºC change)")
+plt.title("Temperature anomalies (pre-industrial levels)");
+
+st.pyplot(df_temp_plot1)
+
+# We can do the same with Northern and Sothern Hemispheres out of curiosity...
+average_n = filtered['NHem'].mean()
+st.text(f'NHem-Average temperature anomalies between 1880 and 1900: {average_n:.2f}')
+average_s = filtered['SHem'].mean()
+st.text(f'SHem-Average temperature anomalies between 1880 and 1900: {average_s:.2f}')
 
